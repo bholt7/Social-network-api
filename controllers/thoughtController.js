@@ -34,7 +34,44 @@ const thoughtController = {
     .then(thoughtData=>{
       !thoughtData ? res.status(404).json({message:'NOPE'}) : res.json(thoughtData)
     })
+  },
+  // update thoughts
+  updateThoughts({params}, res) {
+    Thoughts.findOneAndUpdate({_id: params.id})
+    .then(thoughtData => {
+      !thoughtData ? res.status(404).json({message: 'NOPE'}) : res.json(thoughtData)
+    }) 
+    .catch(err=> res.status(400).json(err))
+  },
+  // delete thoughts
+  deleteThoughts({params}, res) {
+    Thoughts.findOneAndDelete({_id: params.id})
+    .then(thoughtData =>{
+      !thoughtData ? res.status(404).json({message: 'NOPE'}) : res.json(thoughtData)
+    })
+    .catch(err=> res.status(400).json(err))
+  },
+  // add reaction
+  addReaction({params, body}, res) {
+    Thoughts.findOneAndUpdate({_id: params.thoughtId}, {$push: {reactions: body}}, {new: true, runValidators: true})
+    .populate({ path: 'reactions',  select: '-_v'})
+    .select('-_v')
+    .then(thoughtData => {
+      !thoughtData ? res.status(404).json({message: 'NOPE'}) : res.json(thoughtData)
+    })
+    .catch(err=> res.status(400).json(err))
+  },
+  // delete reaction 
+  deleteReaction({params, body}, res) {
+    Thoughts.findOneAndUpdate({_id: params.thoughtId}, {$pull: {reactions:  {reactionId: params.reactionId}}}, {new: true})
+    .then(thoughtData =>{
+      !thoughtData ? res.status(404).json({message: 'NOPE'}) : res.json(thoughtData)
+    })
+    .catch(err=> res.status(400).json(err))
   }
+
 }
+
+module.exports = thoughtController
 
 
