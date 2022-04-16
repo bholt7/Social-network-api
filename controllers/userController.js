@@ -1,16 +1,14 @@
-const {Users, Users} = require('../models')
+const {Users} = require('../models')
 
 // User controller
 const userController = {
   // grabbing Users
   getAllUsers(req, res) {
     Users.find({})
-    .populate({path: 'Users', select: '-__v'})
-    .populate({
-      path: 'friends',
-      select: '-_v',
-    })
     .select('-_v')
+    // .populate('thoughts')
+    // .populate('friends')
+
     .then(userData=>res.json(userData))
     .catch(err=>{
       console.log(err)
@@ -30,9 +28,6 @@ const userController = {
   // create new User
   createUser({params, body}, res) {
     Users.create(body)
-    .then(({_id})=>{
-      return Users.findOneAndUpdate({_id: params.userId}, {$push: {Users: _id}}, {new: true})
-    })
     .then(userData=>{
       !userData ? res.status(404).json({message:'NOPE'}) : res.json(userData)
     })

@@ -5,11 +5,6 @@ const thoughtController = {
   // grabbing thoughts
   getAllThoughts(req, res) {
     Thoughts.find({})
-    .populate({
-      path: 'reactions',
-      select: '-_v',
-    })
-    .select('-_v')
     .then(thoughtData=>res.json(thoughtData))
     .catch(err=>{
       console.log(err)
@@ -29,7 +24,7 @@ const thoughtController = {
   createThought({params, body}, res) {
     Thoughts.create(body)
     .then(({_id})=>{
-      return Users.findOneAndUpdate({_id: params.userId}, {$push: {thoughts: _id}}, {new: true})
+      return Users.findOneAndUpdate({_id: params.id}, {$push: {thoughts: _id}}, {new: true})
     })
     .then(thoughtData=>{
       !thoughtData ? res.status(404).json({message:'NOPE'}) : res.json(thoughtData)
