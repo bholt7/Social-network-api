@@ -31,8 +31,8 @@ const thoughtController = {
     })
   },
   // update thoughts
-  updateThoughts({params}, res) {
-    Thoughts.findOneAndUpdate({_id: params.id})
+  updateThoughts({params, body}, res) {
+    Thoughts.findOneAndUpdate({_id: params.id}, body, {new: true, runValidators: true})
     .then(thoughtData => {
       !thoughtData ? res.status(404).json({message: 'NOPE'}) : res.json(thoughtData)
     }) 
@@ -48,7 +48,7 @@ const thoughtController = {
   },
   // add reaction
   addReaction({params, body}, res) {
-    Thoughts.findOneAndUpdate({_id: params.thoughtId}, {$push: {reactions: body}}, {new: true, runValidators: true})
+    Thoughts.findOneAndUpdate({_id: params.thoughtid}, {$push: {reactions: body}}, {new: true, runValidators: true})
     .populate({ path: 'reactions',  select: '-_v'})
     .select('-_v')
     .then(thoughtData => {
@@ -58,7 +58,7 @@ const thoughtController = {
   },
   // delete reaction 
   deleteReaction({params, body}, res) {
-    Thoughts.findOneAndUpdate({_id: params.thoughtId}, {$pull: {reactions:  {reactionId: params.reactionId}}}, {new: true})
+    Thoughts.findOneAndUpdate({_id: params.thoughtid}, {$pull: {reactions:  {reactionId: params.reactionId}}}, {new: true})
     .then(thoughtData =>{
       !thoughtData ? res.status(404).json({message: 'NOPE'}) : res.json(thoughtData)
     })

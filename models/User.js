@@ -18,11 +18,11 @@ const UserSchema = new Schema (
     },
     thoughts: [{
       type: Schema.Types.ObjectId,
-      ref: 'Thoughts'
+      ref: 'Thought'
     }],
     friends: [{
       type: Schema.Types.ObjectId,
-      ref: 'Users'
+      ref: 'User'
     }]
   },
   {
@@ -39,7 +39,7 @@ UserSchema.virtual('friendCount').get(function(){
 })
 
 // now creating the users model using the users schema
-const Users = model('Users', UserSchema)
+const Users = model('User', UserSchema)
 
 // exporting the mod
 module.exports = Users

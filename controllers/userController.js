@@ -18,7 +18,7 @@ const userController = {
   // get Users by id
   getUserById ({params}, res) {
     Users.findOne({_id: params.id})
-    .populate({path: 'Users', select: '-__v'})
+    .populate({path: 'thoughts', select: '-__v'})
   .populate({ path: 'friends',  select: '-_v'})
     .select('-_v')
     .then(userData=> {
@@ -50,7 +50,9 @@ const userController = {
   },
   //add friend
   addFriend({params}, res) {
-    Users.findOneAndUpdate({_id: params.id}, {$push: { friends: params.friendId}}, {new: true})
+    Users.findOneAndUpdate({_id: params.id}, {$push: { friends: params.friendsid}}, {new: true})
+    .populate({path: 'friends', select: ('-__v')})
+    .select('-__v')
     .then(userData => {
       !userData ? res.status(404).json({message: 'NOPE'}) : res.json(userData)
     }) 
@@ -58,7 +60,9 @@ const userController = {
   },
   // delete friends
   deleteFriend({params, body}, res) {
-    Users.findOneAndUpdate({_id: params.UserId}, {$pull: {friends: params.friendsId}}, {new: true})
+    Users.findOneAndUpdate({_id: params.id}, {$pull: {friends: params.friendsid}}, {new: true})
+    .populate({path: 'friends', select: '-__v'})
+        .select('-__v')
     .then(userData =>{
       !userData ? res.status(404).json({message: 'NOPE'}) : res.json(userData)
     })

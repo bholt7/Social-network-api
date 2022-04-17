@@ -13,9 +13,7 @@ const {
 // set up routes 
 router.route('/').get(getAllUsers).post(createUser)
 
-router.route('/:id').get(getUserById).post(createUser)
-
-router.route('/:id').get(getUserById).put(updateUsers).delete(deleteUsers)
+router.route('/:id').get(getUserById).post(createUser).put(updateUsers).delete(deleteUsers)
 
 router.route('/:id/friends/:friendsid').post(addFriend).delete(deleteFriend)
 
